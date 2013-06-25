@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  *
  * @package Mailer\Email
- * @author Cameron Condry <ccondry2@gmail.com>
+ * @author 	Cameron Condry <ccondry2@gmail.com>
  * @license http://www.opensource.org/licenses/mit-license.php
  * @version 1.0
  */

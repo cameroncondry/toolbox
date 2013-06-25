@@ -1,19 +1,18 @@
 About
 =======
-Provides handling for sending emails with a minimalistic design through multiple interfaces.
+Provides handling for sending emails using procedural design.
 
 Example
 -------
 
 ```php
-use Mailer\Email\Mailer;
-use Mailer\Email\PearBackend;
+require 'includes/mailer.php';
 
 $headers = array(
 	'To' => 'ccondry2@gmail.com',
 	'From' => 'ccondry2@gmail.com',
 	'Bcc' => 'ccondry2@gmail.com',
-	'Subject' => 'Test Email'
+	'Subject' => 'Test Email From ' . $config['base_host']
 );
 
 $data = array('one', 'two', 'three');
@@ -24,15 +23,15 @@ $template_text = $dir . '/templates/template_text.php';
 $attachment_pdf = $dir . '/attachments/test.pdf';
 $attachment_png = $dir . '/attachments/test.png';
 
-$mailer = new Mailer(new PearBackend());
-$mailer->setHeaders($headers);
-$mailer->setHtmlTemplate($template_html, $data);
-$mailer->setTextTemplate($template_text, $data);
-$mailer->addAttachment($attachment_pdf, 'test.pdf');
-$mailer->addHtmlImage($attachment_png, 'test_png');
-$mailer->sendEmail();
+$mailer = mailer_init();
+mailer_set_headers($mailer, $headers);
+mailer_set_template($mailer, $template_html, $template_text, $data);
+mailer_add_attachment($mailer, $attachment_pdf, 'test.pdf');
+mailer_add_image($mailer, $attachment_png, 'test_png');
+$mailer_result = mailer_send($mailer);
 
 var_dump($mailer);
+var_dump($mailer_result);
 ```
 
 template_html.php
@@ -62,7 +61,7 @@ template_html.php
 	Custom Data:
 	<?php
 	echo '<pre>';
-	var_dump($data);
+	var_dump($view_data);
 	echo '</pre><br />';
 	?>
 </p>
