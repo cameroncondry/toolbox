@@ -17,7 +17,7 @@ $headers = array(
 
 $data = array('one', 'two', 'three');
 
-$dir = dirname(__FILE__)
+$dir = dirname(__FILE__);
 $template_html = $dir . '/templates/template_html.php';
 $template_text = $dir . '/templates/template_text.php';
 $attachment_pdf = $dir . '/attachments/test.pdf';
