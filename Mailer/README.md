@@ -1,10 +1,11 @@
 About
-#####
+=======
 Provides handling for sending emails with a minimalistic design through multiple interfaces.
 
 Example
-=======
+-------
 
+```php
 use Mailer\Email\Mailer;
 use Mailer\Email\PearBackend;
 
@@ -30,11 +31,12 @@ $mailer->addHtmlImage($attachment_png, 'test_png');
 $mailer->sendEmail();
 
 var_dump($mailer);
-
----------------------
+```
 
 template_html.php
+---------------------
 
+```html
 <html>
 <head>
 	<title>Test Email</title>
@@ -64,3 +66,4 @@ template_html.php
 </p>
 </body>
 </html>
+```
