@@ -16,6 +16,8 @@ $headers = array(
 	'Subject' => 'Test Email'
 );
 
+$data = array('one', 'two', 'three');
+
 $dir = dirname(__FILE__)
 $template_html = $dir . '/templates/template_html.php';
 $template_text = $dir . '/templates/template_text.php';
@@ -24,8 +26,8 @@ $attachment_png = $dir . '/attachments/test.png';
 
 $mailer = new Mailer(new PearBackend());
 $mailer->setHeaders($headers);
-$mailer->setHtmlTemplate($template_html);
-$mailer->setTextTemplate($template_text);
+$mailer->setHtmlTemplate($template_html, $data);
+$mailer->setTextTemplate($template_text, $data);
 $mailer->addAttachment($attachment_pdf, 'test.pdf');
 $mailer->addHtmlImage($attachment_png, 'test_png');
 $mailer->sendEmail();
