@@ -10,9 +10,9 @@ use Mailer\Email\Mailer;
 use Mailer\Email\PearBackend;
 
 $headers = array(
-	'To' => 'ccondry2@gmail.com',
-	'From' => 'ccondry2@gmail.com',
-	'Bcc' => 'ccondry2@gmail.com',
+	'To' => 'yourname@yourhost.com',
+	'From' => 'yourname@yourhost.com',
+	'Bcc' => 'yourname@yourhost.com',
 	'Subject' => 'Test Email From ' . $config['base_host']
 );
 
