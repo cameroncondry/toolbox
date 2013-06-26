@@ -42,11 +42,18 @@ $(document).ready(function () {
 }
 
 .overview {
-height: 150px;
-left: 0;
-top: 0;
-list-style: none; margin: 0; padding: 0; position: absolute; }
-.overview li { float: left; height: 150px;margin: 0; padding: 0; text-align: left; width: 150px; }
+	height: 150px;
+	left: 0;
+	top: 0;
+	list-style: none; margin: 0; padding: 0; position: absolute; }
+.overview li {
+	float: left;
+	height: 150px;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	width: 150px;
+}
 </style>
 ```
 
