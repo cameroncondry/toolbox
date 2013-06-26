@@ -54,7 +54,7 @@ template_html.php
 	</style>
 </head>
 <body>
-<img src="cid:test_png" alt="Test Image" />
+<img src="test_png" alt="Test Image" />
 <p>Email template handling using pure HTML, CSS, and PHP.</p>
 <p>Attached will be test.pdf initially referenced.</p>
 <p>
