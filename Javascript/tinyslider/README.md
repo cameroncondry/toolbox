@@ -22,9 +22,16 @@ $(document).ready(function () {
 
 ```css
 <style type="text/css">
-.slideshow { height: 1%; overflow: hidden; }
-.buttons { display: block; float: left; height: 16px; margin: 70px 5px 0 5px; position: relative; }
-.disable { visibility: hidden; }
+.buttons {
+	display: block;
+	float: left;
+	height: 16px;
+	margin: 70px 5px 0 5px;
+	position: relative;
+}
+.disable {
+	visibility: hidden;
+}
 
 .viewport img {
 	display: block;
