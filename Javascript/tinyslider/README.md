@@ -1,6 +1,6 @@
-Tiny Slider
+Tiny Slider v0.7
 =======
-Animate elements in a simple and highly customizable carousel. 
+An element carousel with a small footprint.
 
 Example
 -------
@@ -10,10 +10,10 @@ $(document).ready(function () {
 	$('.slideshow').tinyslider({
 		animate: true,
 		infinite: true,
-		beforeanimate: function (elem, index) {
-			console.log(index);
+		start: function (current_slide, slides) {
+			console.log(current_slide);
 		},
-		callback: function (elem, index) {
+		complete: function (current_slide, slides) {
 			console.log('animation complete');
 		}
 	});
@@ -29,6 +29,7 @@ $(document).ready(function () {
 	margin: 70px 5px 0 5px;
 	position: relative;
 }
+
 .disable {
 	visibility: hidden;
 }
@@ -38,27 +39,27 @@ $(document).ready(function () {
 	max-height: 150px;
 	max-width: 150px;
 }
+
 .viewport { 
 	border: 1px solid #000;
-	float: left;
 	height: 150px;
 	position: relative;
 	overflow: hidden;
 	width: 150px;
-	padding: 0;
 }
 
 .overview {
 	height: 150px;
-	left: 0;
-	top: 0;
-	list-style: none; margin: 0; padding: 0; position: absolute; }
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
 .overview li {
 	float: left;
 	height: 150px;
 	margin: 0;
 	padding: 0;
-	text-align: left;
 	width: 150px;
 }
 </style>
@@ -79,20 +80,20 @@ $(document).ready(function () {
 Customizable Options
 --------------------
 
-**debug: false** - Displays plugin actions in the console. *Not included in the minified version of tinyslider*.  
-**animate: false** - Animates the element during the transition.  
-**beforeanimate: null** - Callback function called before each animation begins.  
-**beforeanimatewait: 0** - Time the element waits before starting the next animation.  
-**callback: null** - Callback function called once each animation ends.  
-**controls: false** - Sets up handlers to manually move the elements from one slide to the next.  
-**duration: 1000** - Time the animation will take to complete.  
-**forward: true** - Sets the direction the animation will run, set to false to run in the opposite direction.  
-**infinite: false** - Sets the elements to infinitely scroll in one direction.  
-**intervaltime: 4000** - Wait time between each animation.  
-**pause_on_hover: true** - Pauses the animation when a hover event is fired.  
+**debug**: false           --- Enables debugging messages  
+**animate**: true          --- Enables automatic transitions  
+**animate_wait**: 0        --- Time to wait once an animation is issued  
+**controls**: false        --- Enables controls for the slider  
+**duration**: 1000         --- Time for animation to complete  
+**forward**: true          --- Enables the default direction for automatic transitions  
+**pause_hover**: true      --- Pauses the animation when hovering over slider  
+**infinite**: false        --- Enabled infinite carousel  
+**interval**: 2000         --- Time to wait between each animation  
 
---------------------
-The following options do not work with **infinite: true**.
+###Available callbacks###
+**start**: null            --- Function callback issued before the animation begins  
+**complete**: null         --- Function callback issued after the animation ends  
 
-**display: 1** - Number of elements moved at once.  
-**start: 1** - Element where the carousel starts.
+###Element names###
+**viewport**: 'viewport'   --- Element class on the viewport  
+**overview**: 'overview'   --- Element class on the overview slides  
