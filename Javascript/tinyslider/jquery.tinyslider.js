@@ -1,313 +1,276 @@
 /*
- * Copyright (c) 2013 Cameron Condry <ccondry2@gmail.com>
+ *  Project: Tinyslider v0.7
+ *  Description: An image carousel with a small footprint.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * ===========================================================================
- *
- * Tiny Slider
- *
- * Displays elements in a simple and highly customizable carousel. 
- * 
- * @author: Cameron Condry <ccondry2@gmail.com>
- * @license: http://www.opensource.org/licenses/mit-license.php
- * @version: 0.6.0
- * 
- * Dependencies:
- * 		jQuery <http://code.jquery.com/jquery.js>
- *
+ *  Author: Cameron Condry <ccondry2@gmail.com>
+ *  Copyright: 2013, Cameron Condry
+ *  License: http://www.opensource.org/licenses/mit-license.php
+ *  Dependencies:
+ *  	jQuery <http://code.jquery.com/jquery.js>
  */
-;(function($, window, document, undefined) {
 
-	$.tiny = $.tiny || { };
+;(function ($, window, undefined) {
 
-	$.tiny.slider = {
-		options: {
-			debug: false			// Turns on debugging information
+	// Create the defaults for the
+	var pluginName = 'tinyslider',
+		document = window.document,
+		defaults = {
+			debug: false,			// Enables debugging messages
+			animate: true,			// Enables automatic transitions
+			animate_wait: 0,		// Time to wait once an animation is issued
+			controls: false,		// Enables controls for the slider
+			duration: 1000,			// Time for animation to complete
+			forward: true,			// Enables the default direction for automatic transitions
+			pause_hover: true,		// Pauses the animation when hovering over slider
+			infinite: false,		// Enabled infinite carousel
+			interval: 2000,			// Time to wait between each animation
 
-			, animate: false		// Denotes if the animation should occur
-			, beforeanimate: null	// Function called before animation begins
-			, beforeanimatewait: 0	// Time to wait before starting the animation
-			, callback: null		// Function called when the animation completes
-			, controls: false		// Uses the Next and Previous buttons
-			, duration: 1000		// Duration the animation will take to complete
-			, forward: true			// Set the direction of the animation
-			, infinite: false		// Sets an infinite scrolling loop with the blocks
-			, intervaltime: 4000	// Duration between each animation
-			, pause_on_hover: true	// Pauses the animation on mouse hover events
+			// Available callbacks
+			start: null,			// Function callback issued before the animation begins
+			complete: null,			// Function callback issued after the animation ends
 
 			// Element names
-			, viewport: 'viewport'
-			, overview: 'overview'
+			viewport: 'viewport',	// Element class on the viewport
+			overview: 'overview'	// Element class on the overview slides
+		};
 
-			// The following options do not work with an infinite carousel
-			, display: 1			// Number of blocks to move at one time
-			, start: 1 				// Starting block
-		}
-	};
+	// Plugin constructor
+	function Plugin(element, options) {
+		var tiny = this;
 
-	$.fn.tinyslider = function (params) {
-		var settings = $.extend({}, $.tiny.slider.options, params);
+		tiny.element = $(element);
+		tiny.options = $.extend({}, defaults, options);
+		tiny.options = $.extend({}, tiny.options, {
+			viewport: 		$('.' + tiny.options.viewport + ':first', element),
+			overview: 		$('.' + tiny.options.overview + ':first', element),
+			slide_count: 	0,
+			slide_current: 	1,
+			slide_size: 	0,
+			btn_next: 		$('.next:first', element),
+			btn_prev: 		$('.prev:first', element),
+			pause: 			false,
+			animating: 		false,
+			timer: 			undefined
+		});
 
-		return this.each(function () { new Slider($(this), settings); });
-	};
+		tiny.init();
+	}
 
-	function Slider(root, settings) {
-		var self		= this
-		, viewport 		= $('.' + settings.viewport + ':first', root)
-		, content		= $('.' + settings.overview + ':first', root)
-		, slides		= $('ul.' + settings.overview, root)
-		, pages			= content.children()
-		, page_count	= pages.length
-		, page_current	= 0
-		, page_size		= 0
-		, steps			= 0
-		, btn_next		= $('.next:first', root)
-		, btn_prev		= $('.prev:first', root)
-		, forward		= true
-		, pause			= false
-		, animating		= false
-		, timer			= undefined
-		;
+	Plugin.prototype = {
+		init: function () {
+			var tiny = this,
+				options = tiny.options;
 
-		this.move = function (direction) {
+			tiny.debug('Tinyslider Initialized');
 
-			// Wait until any previous animation completes before starting the next animation
-			if (animating) {
-				if (settings.debug) {
-					console.log('Slider::move(' + direction + ') Waiting for animation to complete');
+			// Save the individual slide information
+			options.slide_count = options.overview.children().length;
+			options.slide_size = $(options.overview[0]).outerWidth(true);
+			options.overview_size = options.slide_count * options.slide_size
+
+			// Line up the images
+			options.overview.css({width: options.overview_size});
+
+			// Set the event handlers
+			tiny.set_timer();
+			tiny.set_events();
+			tiny.set_controls();
+
+			tiny.debug(this.options);
+		},
+
+		// Animation tinyslider
+		move: function (direction) {
+			var tiny = this,
+				options = tiny.options,
+				slides = options.overview.children();
+
+			tiny.debug('Direction: ' + (direction == 1 ? 'Right' : 'Left'));
+
+			// Exit if an animation is already running
+			if (options.animating) {
+				tiny.debug('Waiting for animation to complete');
+				return false;
+			}
+
+			options.animating = true;
+
+			// Update current slide state
+			options.slide_current += direction;
+			options.slide_current = (options.slide_current >= 1) ? options.slide_current : options.slide_count;
+			options.slide_current = (options.slide_current <= options.slide_count) ? options.slide_current : 1;
+
+			// Callback before the animation begins
+			var start = function () {
+				if (typeof options.start === 'function') {
+					tiny.debug('Start callback executing');
+					options.start.call(tiny, options.slide_current, slides);
 				}
-			} else {
+			};
 
-				// Lock further animations while processing
-				animating = true;
+			// Callback after the animation completes
+			var complete = function () {
+				options.animating = false;
 
-				// Set the block to move towards
-				page_current += direction;
+				if (typeof options.complete === 'function') {
+					tiny.debug('Complete callback executing');
+					options.complete.call(tiny, options.slide_current, slides);
+				}
+			};
 
-				// Wrap the current page when at the end and beginning of the slideshow
-				page_current = (page_current <= steps - 1) ? page_current : 0;
-				page_current = (page_current >= 0) ? page_current : steps - 1;
+			start();
 
-				// Callback before the animation starts
-				if (typeof settings.beforeanimate === 'function') {
+			// Time to wait before starting animation
+			setTimeout(function () {
+				// Determine if the carousel is infinite
+				if (!options.infinite) {
+					options.overview.animate({
+						left: -((options.slide_current - 1) * options.slide_size)
+					},{
+						duration: options.duration,
+						complete: complete()
+					});
+				} else {
 
-					if (settings.debug) {
-						console.log('Slider::move(' + direction + ').beforeanimate()');
+					var left = (direction < 0) ? 0 : -options.slide_size;
+
+					// Rotate the last slide to the beginning
+					if (direction < 0) {
+						slides.last().css({
+							marginLeft: -options.slide_size
+						}).insertBefore(slides.first());
+
+						slides = options.overview.children();
 					}
 
-					settings.beforeanimate.call(this, pages[page_current], page_current);
-				}
-
-				// Callback after the animation ends
-				var callback = function () {
-
-					// Reset the animating state once complete
-					animating = false;
-
-					if (typeof settings.callback === 'function') {
-
-						if (settings.debug) {
-							console.log('Slider::move(' + direction + ').callback()');
-						}
-
-						settings.callback.call(this, pages[page_current], page_current);
-					}
-				}
-
-				// Wait time before starting the animation
-				setTimeout(function () {
-
-					// Determine if the the carousel is infinite
-					if (settings.infinite) {
-
-						var list = $(slides).children();
-
-						// Determine direction
-						if (direction > 0) {
-
-							// Move to the next slide
-							list.first().animate({
-								marginLeft: '-=' + page_size + 'px'
-							}, {
-								queue: false,
-								duration: settings.duration,
-								complete: function () {
-									// Rotate the first item to the last item
-									list.first().css({
-										marginLeft: '0px',
-									}).insertAfter(list.last());
-
-									callback();
-								}
-							});
-						} else {
-
-							// Rotate the last item to the first item
-							list.last().css({
-								marginLeft: '-' + page_size + 'px',
-							}).insertBefore(list.first());
-
-							// Refresh the list before animating
-							list = $(slides).children();
-
-							// Move to the previous slide
-							list.first().animate({
-								marginLeft: '0'
-							}, {
-								queue: false,
-								duration: settings.duration,
-								complete: function () {
-									callback();
-								}
-							});
-						}
-						
-					} else {
-						content.animate({
-							left: -(page_current * (page_size * settings.display)) + 'px'
-						}, {
-							queue: false,
-							duration: settings.duration,
-							complete: function () {
-								callback();
+					slides.first().animate({
+						marginLeft: left
+					},{
+						duration: options.duration,
+						complete: function () {
+							// Rotate the first slide to the end
+							if (direction > 0) {
+								slides.first().css({
+									marginLeft: 0
+								}).insertAfter(slides.last());
 							}
-						});
-					}
-				}, settings.beforeanimatewait);
 
-				set_timer();
-				set_buttons();
-
-				if (settings.debug) {
-					console.log('Slider::move(' + direction + ') Current Page: ' + page_current + ' / ' + steps);
-				}
-			}
-		}
-
-		this.start = function () {
-
-			if (settings.debug) {
-				console.log('Slider::start()');
-			}
-
-			pause = false;
-			set_timer();
-		}
-
-		this.stop = function () {
-
-			if (settings.debug) {
-				console.log('Slider::stop()');
-			}
-
-			clearTimeout(timer);
-			pause = true;
-		}
-
-		function set_timer() {
-
-			if (settings.animate && !pause) {
-				clearTimeout(timer);
-
-				timer = setTimeout(function () {
-					self.move(settings.forward ? 1 : -1);
-				}, settings.intervaltime);
-			}
-		}
-
-		function set_buttons() {
-			if (settings.controls && !settings.infinite) {
-
-				if (settings.debug) {
-					console.log('Slider::set_buttons() Current Page: ' + page_current + ' / ' + steps);
+							complete();
+						}
+					});
 				}
 
-				btn_next.toggleClass('disable', !(page_current + 1 < steps));
-				btn_prev.toggleClass('disable', page_current <= 0);
-			}
-		}
+				tiny.set_timer();
 
-		function set_events() {
+			}, options.animate_wait);
+
+			tiny.set_controls();
+
+			tiny.debug('Page: ' + options.slide_current + '/' + options.slide_count);
+		},
+
+		// Force start the animations
+		force_start: function (tiny) {
+			var options = tiny.options;
+
+			tiny.debug('Restarting animation');
+
+			options.pause = false;
+			tiny.set_timer();
+		},
+
+		// Force stop the animations
+		force_stop: function (tiny) {
+			var options = tiny.options;
+
+			tiny.debug('Pausing animation');
+
+			clearTimeout(options.timer);
+			options.pause = true;
+		},
+
+		// Set the state of the controls
+		set_controls: function () {
+			var tiny = this,
+				options = tiny.options;
+
+			if (options.controls && !options.infinite) {
+				tiny.debug('Updating control\'s state');
+
+				options.btn_prev.toggleClass('disable', (options.slide_current <= 1));
+				options.btn_next.toggleClass('disable', (options.slide_current >= options.slide_count))
+			}
+		},
+
+		// Bind the events that occur while interacting
+		set_events: function () {
+			var tiny = this,
+				options = tiny.options;
+
 			// Stop animation during mouse hover
-			if (settings.animate && settings.pause_on_hover) {
-				root.hover(self.stop, self.start);
-			}
+			if (options.animate && options.pause_hover) {
+				tiny.debug('Pause hover enabled');
 
-			// Move the slideshow based on which control is clicked
-			if (settings.controls) {
-				btn_next.on('click', function (e) {
-					var elem = e.currentTarget
-
-					if (!$(elem).hasClass('disable')) {
-						self.move(1);
-					}
-					return false; 
-				});
-				btn_prev.on('click', function (e) {
-					var elem = e.currentTarget
-
-					if (!$(elem).hasClass('disable')) {
-						self.move(-1);
-					}
-					return false;
+				tiny.element.hover(function () {
+					tiny.force_stop(tiny);
+				}, function () {
+					tiny.force_start(tiny);
 				});
 			}
-		}
 
-		function initialize() {
+			// Bind events to controls
+			if (options.controls) {
+				tiny.debug('Button controls enabled');
 
-			if (settings.debug) {
-				console.log('Slider::initialize()');
+				event_move = function (elem, direction) {
+					var elem = $(elem);
+
+					elem.on('click', function (event) {
+						event.preventDefault();
+						if (!elem.hasClass('disable')) {
+							tiny.move(direction);
+						}
+					});
+				};
+
+				event_move(options.btn_prev, -1);
+				event_move(options.btn_next, 1);
 			}
+		},
 
-			// Retrieve the block size to calculate full width of the element
-			page_size = $(pages[0]).outerWidth(true);
+		// Set the timer for the next event
+		set_timer: function () {
+			var tiny = this,
+				options = tiny.options;
 
-			// Set the distance and starting location
-			steps = Math.max(1, Math.ceil(page_count / settings.display));
-			page_current = Math.min(steps, Math.max(1, settings.start)) - 1;
+			if (options.animate && !options.pause) {
+				clearTimeout(options.timer);
 
-			// Calculate and set the full width of the element
-			content.css('width', page_size * page_count);
-
-			// Begin the animation
-			set_timer();
-			set_events();
-			set_buttons();
-
-			if (settings.debug) {
-				console.log('steps: ' + steps);
-				console.log('page_size: ' + page_size);
-				console.log('page_count: ' + page_count);
-				console.log('page_current: ' + page_current);
-				console.log('settings.start: ' + settings.start);
-				console.log('settings.display: ' + settings.display);
-				console.log('settings.infinite: ' + settings.infinite);
-				console.log('settings.duration: ' + settings.duration);
-				console.log('settings.intervaltime: ' + settings.intervaltime);
+				options.timer = setTimeout(function () {
+					tiny.move(options.forward ? 1 : -1);
+				}, options.interval);
 			}
+		},
 
-			return self;
+		// Debugging message wrapper to safely output results
+		debug: function (msg) {
+			if (this.options.debug) {
+				if (window.console && window.console.log) {
+					window.console.log(msg);
+				} else {
+					alert(msg);
+				}
+			}
 		}
-
-		initialize();
 	};
 
-} (jQuery, window, document));
+	// Plugin wrapper to prevent multiple instantiations
+	$.fn[pluginName] = function (options) {
+		return this.each(function () {
+			if (!$.data(this, 'plugin_' + pluginName)) {
+				$.data(this, 'plugin_' + pluginName, new Plugin( this, options ));
+			}
+		});
+	};
+
+}(jQuery, window));
