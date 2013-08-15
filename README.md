@@ -6,5 +6,4 @@ as a micro-framework of sorts, with code that solves specific problems, without 
 Technologies
 ------------
 PHP 5.3 - 5.4  
-Javascript  
-Jquery  
+Javascript ([jQuery](http://example.com/ "jQuery"))
