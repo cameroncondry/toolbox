@@ -30,8 +30,8 @@
 			complete: null,			// Function callback issued after the animation ends
 
 			// Element names
-			viewport: 'viewport',	// Element class on the viewport
-			overview: 'overview'	// Element class on the overview slides
+			viewport: 'viewport',		// Element class on the viewport
+			overview: 'overview'		// Element class on the overview slides
 		};
 
 	// Plugin constructor
@@ -43,9 +43,9 @@
 		tiny.options = $.extend({}, tiny.options, {
 			viewport: 		$('.' + tiny.options.viewport + ':first', element),
 			overview: 		$('.' + tiny.options.overview + ':first', element),
-			slide_count: 	0,
-			slide_current: 	1,
-			slide_size: 	0,
+			slide_count: 		0,
+			slide_current: 		1,
+			slide_size: 		0,
 			btn_next: 		$('.next:first', element),
 			btn_prev: 		$('.prev:first', element),
 			pause: 			false,
