@@ -52,7 +52,7 @@ $(document).ready(function () {
 Customizable Options
 --------------------
 
-**debug: false** - Displays plugin actions in the console.
-**duration: 1000** - Total duration for the animation.
-**duration_offset: 0.7** - Offset modifier when multiple sections are animated.
+**debug: false** - Displays plugin actions in the console.  
+**duration: 1000** - Total duration for the animation.  
+**duration_offset: 0.7** - Offset modifier when multiple sections are animated.  
 **marginLeft: -1000** - Distance sections will travel.
