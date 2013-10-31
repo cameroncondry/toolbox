@@ -8,10 +8,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -71,7 +71,7 @@ class Mailer implements MailerInterface {
 	private $_template_text;
 
 	/**
-	 * Contains the result object from mailing erors. Returns TRUE on
+	 * Contains the result object from mailing erors. Returns true on
 	 * success and a result object on failure.
 	 * @var bool or result object
 	 */
@@ -127,7 +127,7 @@ class Mailer implements MailerInterface {
 	 * @param string $path
 	 * @param array $data
 	 */
-	public function setHtmlTemplate($path, $data = FALSE) {
+	public function setHtmlTemplate($path, $data = false) {
 		$this->_template_html = $this->_populateTemplate($path, $data);
 	}
 
@@ -145,7 +145,7 @@ class Mailer implements MailerInterface {
 	 * @param string $path
 	 * @param array $data
 	 */
-	public function setTextTemplate($path, $data = FALSE) {
+	public function setTextTemplate($path, $data = false) {
 		$this->_template_text = $this->_populateTemplate($path, $data);
 	}
 
@@ -163,7 +163,7 @@ class Mailer implements MailerInterface {
 	 * @param string $filename
 	 * @param string $mime_type
 	 */
-	public function addAttachment($path, $filename, $mime_type = FALSE) {
+	public function addAttachment($path, $filename, $mime_type = false) {
 
 		if (!$mime_type) {
 			$mime_type = $this->_getMimetype($path);
@@ -195,7 +195,7 @@ class Mailer implements MailerInterface {
 	 * @param string $content_id
 	 * @param string $mime_type
 	 */
-	public function addHtmlImage($path, $content_id, $mime_type = FALSE) {
+	public function addHtmlImage($path, $content_id, $mime_type = false) {
 
 		if (!$mime_type) {
 			$mime_type = $this->_getMimetype($path);
@@ -213,7 +213,7 @@ class Mailer implements MailerInterface {
 			'path' => $path,
 			'mime_type' => $mime_type,
 			'name' => array_pop(explode('/', $path)),
-			'is_file' => TRUE,
+			'is_file' => true,
 			'content_id' => $content_id
 		);
 	}
@@ -265,14 +265,14 @@ class Mailer implements MailerInterface {
 
 	/**
 	 * Returns the results of the mailer.
-	 * @return FALSE if the mailer has not been sent, TRUE on successful sending, or a Result Object
+	 * @return false if the mailer has not been sent, true on successful sending, or a Result Object
 	 * containing the errors on sending failure.
 	 */
 	public function getResults() {
 		if ($this->_message_result) {
 			return $this->_message_result;
 		} else {
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -303,7 +303,7 @@ class Mailer implements MailerInterface {
 	 */
 	private function _getMimetype($path) {
 
-		$return_value = FALSE;
+		$return_value = false;
 
 		if (file_exists($path)) {
 			$finfo = finfo_open(FILEINFO_MIME);

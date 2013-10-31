@@ -1,4 +1,4 @@
-Tiny Slider v0.7
+TinySlider v0.7
 =======
 An element carousel with a small footprint.
 
@@ -40,7 +40,7 @@ $(document).ready(function () {
 	max-width: 150px;
 }
 
-.viewport { 
+.viewport {
 	border: 1px solid #000;
 	height: 150px;
 	position: relative;
@@ -80,20 +80,20 @@ $(document).ready(function () {
 Customizable Options
 --------------------
 
-**debug**: false           --- Enables debugging messages  
-**animate**: true          --- Enables automatic transitions  
-**animate_wait**: 0        --- Time to wait once an animation is issued  
-**controls**: false        --- Enables controls for the slider  
-**duration**: 1000         --- Time for animation to complete  
-**forward**: true          --- Enables the default direction for automatic transitions  
-**pause_hover**: true      --- Pauses the animation when hovering over slider  
-**infinite**: false        --- Enabled infinite carousel  
-**interval**: 2000         --- Time to wait between each animation  
+**debug**: false           --- Enables debugging messages
+**animate**: true          --- Enables automatic transitions
+**animate_wait**: 0        --- Time to wait once an animation is issued
+**controls**: false        --- Enables controls for the slider
+**duration**: 1000         --- Time for animation to complete
+**forward**: true          --- Enables the default direction for automatic transitions
+**pause_hover**: true      --- Pauses the animation when hovering over slider
+**infinite**: false        --- Enabled infinite carousel
+**interval**: 2000         --- Time to wait between each animation
 
 ###Available callbacks###
-**start**: null            --- Function callback issued before the animation begins  
-**complete**: null         --- Function callback issued after the animation ends  
+**start**: null            --- Function callback issued before the animation begins
+**complete**: null         --- Function callback issued after the animation ends
 
 ###Element names###
-**viewport**: 'viewport'   --- Element class on the viewport  
-**overview**: 'overview'   --- Element class on the overview slides  
+**viewport**: 'viewport'   --- Element class on the viewport
+**overview**: 'overview'   --- Element class on the overview slides

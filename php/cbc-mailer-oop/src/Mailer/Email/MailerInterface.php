@@ -26,7 +26,7 @@ interface MailerInterface {
 	 * @param string $path
 	 * @param array $data
 	 */
-	public function setHtmlTemplate($path, $data = FALSE);
+	public function setHtmlTemplate($path, $data = false);
 
 	/**
 	 * Set required text template based on a template file. Can also pass extra
@@ -34,7 +34,7 @@ interface MailerInterface {
 	 * @param string $path
 	 * @param array $data
 	 */
-	public function setTextTemplate($path, $data = FALSE);
+	public function setTextTemplate($path, $data = false);
 
 	/**
 	 * Adds an attachment to the email. Detects the mimetype if not provided.
@@ -42,7 +42,7 @@ interface MailerInterface {
 	 * @param string $filename
 	 * @param string $mime_type
 	 */
-	public function addAttachment($path, $filename, $mime_type = FALSE);
+	public function addAttachment($path, $filename, $mime_type = false);
 
 	/**
 	 * Adds an image to the email that is referenced by the content id. Detects the mimetype if not provided.
@@ -51,7 +51,7 @@ interface MailerInterface {
 	 * @param string $content_id
 	 * @param string $mime_type
 	 */
-	public function addHtmlImage($path, $content_id, $mime_type = FALSE);
+	public function addHtmlImage($path, $content_id, $mime_type = false);
 
 	/**
 	 * Validates and formats the email addresses before sending the email using
@@ -61,7 +61,7 @@ interface MailerInterface {
 
 	/**
 	 * Returns the results of the mailer.
-	 * @return FALSE if the mailer has not been sent, TRUE on successful sending, or a Result Object
+	 * @return false if the mailer has not been sent, TRUE on successful sending, or a Result Object
 	 * containing the errors on sending failure.
 	 */
 	public function getResults();

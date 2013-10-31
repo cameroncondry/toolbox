@@ -1,12 +1,15 @@
-/*
- *  Project: Tinyslider v0.7
- *  Description: An image carousel with a small footprint.
+/**
+ *    Image carousel with a small footprint.
  *
- *  Author: Cameron Condry <ccondry2@gmail.com>
- *  Copyright: 2013, Cameron Condry
- *  License: http://www.opensource.org/licenses/mit-license.php
- *  Dependencies:
- *  	jQuery <http://code.jquery.com/jquery.js>
+ *    @package: Toolbox\Tinyslider
+ *    @author: Cameron Condry <ccondry2@gmail.com>
+ *    @copyright: 2013 Cameron Condry
+ *    @license: http://www.opensource.org/licenses/mit-license.php
+ *    @link: http://www.cameroncondry.com
+ *    @version: 0.7
+ *
+ *    Dependencies:
+ *    	jQuery <http://code.jquery.com/jquery.js>
  */
 
 ;(function ($, window, undefined) {
@@ -15,23 +18,23 @@
 	var pluginName = 'tinyslider',
 		document = window.document,
 		defaults = {
-			debug: false,			// Enables debugging messages
-			animate: true,			// Enables automatic transitions
-			animate_wait: 0,		// Time to wait once an animation is issued
-			controls: false,		// Enables controls for the slider
-			duration: 1000,			// Time for animation to complete
-			forward: true,			// Enables the default direction for automatic transitions
-			pause_hover: true,		// Pauses the animation when hovering over slider
-			infinite: false,		// Enabled infinite carousel
-			interval: 2000,			// Time to wait between each animation
+			debug: 			false,		// Enables debugging messages
+			animate: 		true,		// Enables automatic transitions
+			animate_wait: 	0,			// Time to wait once an animation is issued
+			controls: 		false,		// Enables controls for the slider
+			duration: 		1000,		// Time for animation to complete
+			forward: 		true,		// Enables the default direction for automatic transitions
+			pause_hover: 	true,		// Pauses the animation when hovering over slider
+			infinite: 		false,		// Enabled infinite carousel
+			interval: 		2000,		// Time to wait between each animation
 
 			// Available callbacks
-			start: null,			// Function callback issued before the animation begins
-			complete: null,			// Function callback issued after the animation ends
+			start: 			null,		// Function callback issued before the animation begins
+			complete: 		null,		// Function callback issued after the animation ends
 
 			// Element names
-			viewport: 'viewport',		// Element class on the viewport
-			overview: 'overview'		// Element class on the overview slides
+			viewport: 		'viewport',	// Element class on the viewport
+			overview: 		'overview'	// Element class on the overview slides
 		};
 
 	// Plugin constructor
@@ -43,9 +46,9 @@
 		tiny.options = $.extend({}, tiny.options, {
 			viewport: 		$('.' + tiny.options.viewport + ':first', element),
 			overview: 		$('.' + tiny.options.overview + ':first', element),
-			slide_count: 		0,
-			slide_current: 		1,
-			slide_size: 		0,
+			slide_count: 	0,
+			slide_current: 	1,
+			slide_size: 	0,
 			btn_next: 		$('.next:first', element),
 			btn_prev: 		$('.prev:first', element),
 			pause: 			false,

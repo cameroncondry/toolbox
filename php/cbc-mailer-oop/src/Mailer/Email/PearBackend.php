@@ -80,7 +80,7 @@ class PearBackend implements BackendInterface {
 		$mail = Mail::factory('smtp', array(
 			'host' => 'localhost',
 			'port' => 25,
-			'auth' => FALSE,
+			'auth' => false,
 			'username' => '',
 			'password' => '',
 			'localhost' => $_SERVER['SERVER_NAME']
@@ -96,14 +96,14 @@ class PearBackend implements BackendInterface {
 
 	/**
 	 * Returns the results of the mailer.
-	 * @return FALSE if the mailer has not been sent, TRUE on successful sending, or a Result Object
+	 * @return false if the mailer has not been sent, TRUE on successful sending, or a Result Object
 	 * containing the errors on sending failure.
 	 */
 	public function getResults() {
 		if ($this->_message_result) {
 			return $this->_message_result;
 		} else {
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -112,7 +112,7 @@ class PearBackend implements BackendInterface {
 	 * @return Mail_mime object.
 	 */
 	private function _getMime() {
-		static $returnValue = NULL;
+		static $returnValue = null;
 
 		if (!$returnValue) {
 			$returnValue = new Mail_mime(array(
