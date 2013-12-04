@@ -50,7 +50,7 @@ class Constraint {
 	 */
 	public static function required() {
 		return function ($data) {
-			return (bool) strlen($data);
+			return strlen($data) > 0;
 		};
 	}
 }
