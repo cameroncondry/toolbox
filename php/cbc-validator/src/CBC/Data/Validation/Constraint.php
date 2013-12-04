@@ -6,33 +6,33 @@ class Constraint {
 
 	/**
 	 * Validates email constraint.
-	 * 
+	 *
 	 * @return callable
 	 */
 	public static function email() {
 		return function ($data) {
 			if ($data) {
-				return (filter_var($data, FILTER_VALIDATE_EMAIL));
+				return filter_var($data, FILTER_VALIDATE_EMAIL);
 			}
 		};
 	}
 
 	/**
 	 * Validates number constraint.
-	 * 
+	 *
 	 * @return callable
 	 */
 	public static function numeric() {
 		return function ($data) {
 			if ($data) {
-				return (is_numeric($data));
+				return is_numeric($data);
 			}
 		};
 	}
 
 	/**
 	 * Validates regex constraint.
-	 * 
+	 *
 	 * @return callable
 	 */
 	public static function regex() {
@@ -45,12 +45,12 @@ class Constraint {
 
 	/**
 	 * Validates required constraint.
-	 * 
-	 * @return callabel
+	 *
+	 * @return callable
 	 */
 	public static function required() {
 		return function ($data) {
-			return (bool) strlen((string) $data);
+			return (bool) strlen($data);
 		};
 	}
 }
